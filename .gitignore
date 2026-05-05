@@ -1,0 +1,37 @@
+# Virtual Environments
+.venv/
+venv/
+ENV/
+node_modules/
+
+# Python Cache
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Next.js Build
+.next/
+out/
+build/
+
+# Local Data & Secrets
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.db
+data/
+storage/
+
+# Markdown Restriction
+*.md
+!README.md
+
+# Planning (GSD Internal)
+.planning/
+
+# OS Files
+.DS_Store
+Thumbs.db
