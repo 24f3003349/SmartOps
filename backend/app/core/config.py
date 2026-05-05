@@ -24,12 +24,20 @@ class Settings(BaseSettings):
         # Fallback to sqlite for local dev if postgres not reachable (simplified logic)
         return postgres_uri if values.data.get('POSTGRES_SERVER') != 'localhost' else "sqlite:///./sql_app.db"
 
-    # AI
+    # AI & Routing
     LLM_PROVIDER: str = "ollama"  # or "openai"
     OLLAMA_BASE_URL: str = "http://localhost:11434"
-    OLLAMA_MODEL: str = "llama3"
+    OLLAMA_MODEL: str = "llama3.2:1b"
     OPENAI_API_KEY: Optional[str] = None
     OPENAI_API_BASE: Optional[str] = None # For OpenAI-compatible APIs
+
+    # Mapping category to User ID (mock/placeholder IDs)
+    DEFAULT_ROUTING: dict = {
+        "Technical": 1,
+        "Billing": 1,
+        "General": 1,
+        "Feature Request": 1
+    }
 
     model_config = SettingsConfigDict(case_sensitive=True, env_file=".env")
 
