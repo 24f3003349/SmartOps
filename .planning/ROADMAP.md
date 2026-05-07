@@ -1,28 +1,22 @@
-# SmartOps AI Roadmap
+# Roadmap: SmartOps AI
 
-## Phase 1: Foundation & Observability
-- [x] Monorepo setup (Next.js/FastAPI).
-- [x] JWT Auth & Security.
-- [x] SQLModel schemas.
-- [x] OpenTelemetry instrumentation.
+## Milestones
 
-## Phase 2: Ingestion & Knowledge Layer
-- [x] Ticket Inbox UI & API.
-- [x] Document Upload & Knowledge Base UI.
-- [x] LlamaIndex integration (Ollama/OpenAI).
-- [x] Vector Storage (SQLite/PostgreSQL).
+- ✅ **v1.0 MVP** — Phases 1-5 (shipped 2026-05-07) [.planning/milestones/v1.0-ROADMAP.md]
 
-## Phase 3: AI Classification & Routing
-- [x] Urgency/Category prediction API.
-- [x] Auto-routing logic.
-- [x] Workflow state management.
+## Phases
 
-## Phase 4: Suggestion & Approval Workflow
-- [x] RAG-based reply drafting.
-- [x] Human-in-the-loop approval UI.
-- [x] Audit logs for AI vs Human edits.
+<details>
+<summary>✅ v1.0 MVP (Phases 1-5) — SHIPPED 2026-05-07</summary>
 
-## Phase 5: Analytics & Deployment
-- [x] Dashboard UI (Metrics).
-- [x] Dockerization.
-- [x] AWS/GCP Deployment setup.
+- [x] Phase 1: Foundation & Observability (completed 2026-05-05)
+- [x] Phase 2: Ingestion & Knowledge Layer (completed 2026-05-05)
+- [x] Phase 3: AI Classification & Routing (completed 2026-05-05)
+- [x] Phase 4: Suggestion & Approval Workflow (completed 2026-05-07)
+- [x] Phase 5: Analytics & Deployment (completed 2026-05-07)
+
+</details>
+
+### 🚧 v1.1 (Planned)
+
+- [ ] Phase 6: Planning next milestone...
