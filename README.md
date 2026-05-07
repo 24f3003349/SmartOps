@@ -26,17 +26,23 @@ SmartOps AI is a powerful, agentic AI platform designed to automate ticket triag
 
 ## Setup & Running
 
-### Backend
+### Using Docker (Recommended)
+1. Ensure you have Docker and Docker Compose installed.
+2. Set your environment variables (e.g., `OPENAI_API_KEY`) in a `.env` file or export them.
+3. Run `docker-compose up --build`
+4. Access the **Dashboard** at `http://localhost:3000` and the **API Docs** at `http://localhost:8000/docs`.
+
+### Backend (Manual)
 1. `cd backend`
 2. `uv sync`
-3. `uv run python -m uvicorn app.main:app --port 8000 --reload`
+3. `uv run uvicorn app.main:app --port 8000 --reload`
 
-### Frontend
+### Frontend (Manual)
 1. `cd frontend`
 2. `npm install`
 3. `npm run dev`
 
 ## Roadmap
 - [x] Phase 1-3: Core Triage & Knowledge
-- [ ] Phase 4: Suggestion & Approval Workflow (Next)
-- [ ] Phase 5: Analytics & Deployment
+- [x] Phase 4: Suggestion & Approval Workflow
+- [x] Phase 5: Analytics & Deployment
