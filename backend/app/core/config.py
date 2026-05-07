@@ -28,6 +28,7 @@ class Settings(BaseSettings):
     LLM_PROVIDER: str = "ollama"  # or "openai"
     OLLAMA_BASE_URL: str = "http://localhost:11434"
     OLLAMA_MODEL: str = "llama3.2:1b"
+    OLLAMA_EMBED_MODEL: str = "nomic-embed-text"
     OPENAI_API_KEY: Optional[str] = None
     OPENAI_API_BASE: Optional[str] = None # For OpenAI-compatible APIs
 

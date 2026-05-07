@@ -40,4 +40,19 @@ class KnowledgeService:
             return self.index
         return None
 
+    def get_query_engine(self):
+        """Returns a query engine for the current index."""
+        if not self.index:
+            self.load_index()
+        
+        if not self.index:
+            # If still no index, try ingesting if directory exists
+            if os.path.exists(UPLOAD_DIR):
+                self.ingest_documents()
+        
+        if not self.index:
+            raise Exception("No knowledge index found or created. Please upload documents first.")
+            
+        return self.index.as_query_engine()
+
 knowledge_service = KnowledgeService()

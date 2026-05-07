@@ -5,6 +5,7 @@ from ....core.db import get_session, engine
 from ....core.config import settings
 from ....models.ticket import Ticket
 from ....services.triage import triage_service
+from ....services.drafting import drafting_service
 
 router = APIRouter()
 
@@ -42,6 +43,43 @@ def process_ticket_triage(ticket_id: int):
         session.add(ticket)
         session.commit()
         print(f"DEBUG: Triage completed and committed for ticket {ticket_id}")
+
+@router.post("/{ticket_id}/draft", response_model=dict)
+def generate_ticket_draft(
+    *,
+    session: Session = Depends(get_session),
+    ticket_id: int
+):
+    """Generates an AI response draft for a ticket."""
+    ticket = session.get(Ticket, ticket_id)
+    if not ticket:
+        raise HTTPException(status_code=404, detail="Ticket not found")
+    
+    draft = drafting_service.generate_draft(ticket)
+    return {"draft": draft}
+
+@router.post("/{ticket_id}/resolve", response_model=Ticket)
+def resolve_ticket(
+    *,
+    session: Session = Depends(get_session),
+    ticket_id: int,
+    resolution_text: str
+):
+    """Resolves a ticket with a final response."""
+    ticket = session.get(Ticket, ticket_id)
+    if not ticket:
+        raise HTTPException(status_code=404, detail="Ticket not found")
+    
+    ticket.status = "resolved"
+    ticket.ai_suggestion = resolution_text # Save final text
+    
+    # Simulate sending email
+    print(f"SIMULATION: Sending email to {ticket.contact_email} with resolution: {resolution_text[:50]}...")
+    
+    session.add(ticket)
+    session.commit()
+    session.refresh(ticket)
+    return ticket
 
 @router.get("/", response_model=List[Ticket])
 def read_tickets(
