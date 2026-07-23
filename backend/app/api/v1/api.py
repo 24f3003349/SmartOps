@@ -1,7 +1,9 @@
 from fastapi import APIRouter
-from .endpoints import tickets, knowledge, analytics
+from .endpoints import tickets, knowledge, analytics, events
 
 api_router = APIRouter()
 api_router.include_router(tickets.router, prefix="/tickets", tags=["tickets"])
 api_router.include_router(knowledge.router, prefix="/knowledge", tags=["knowledge"])
 api_router.include_router(analytics.router, prefix="/analytics", tags=["analytics"])
+api_router.include_router(events.router, prefix="/events", tags=["events"])
+
