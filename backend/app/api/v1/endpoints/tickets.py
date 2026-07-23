@@ -1,3 +1,4 @@
+import asyncio
 from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
 from sqlmodel import Session, select
 from typing import List
@@ -6,6 +7,8 @@ from ....core.config import settings
 from ....models.ticket import Ticket
 from ....services.triage import triage_service
 from ....services.drafting import drafting_service
+from ....services.diff_metrics import calculate_diff_metrics
+from ....services.events import event_broadcaster
 
 router = APIRouter()
 
@@ -43,6 +46,11 @@ def process_ticket_triage(ticket_id: int):
         session.add(ticket)
         session.commit()
         print(f"DEBUG: Triage completed and committed for ticket {ticket_id}")
+        
+        try:
+            asyncio.run(event_broadcaster.publish("triage_completed", {"ticket_id": ticket_id, "category": ticket.category, "priority": ticket.priority}))
+        except Exception:
+            pass
 
 @router.post("/{ticket_id}/draft", response_model=dict)
 def generate_ticket_draft(
@@ -65,13 +73,21 @@ def resolve_ticket(
     ticket_id: int,
     resolution_text: str
 ):
-    """Resolves a ticket with a final response."""
+    """Resolves a ticket with a final response and computes diff metrics."""
     ticket = session.get(Ticket, ticket_id)
     if not ticket:
         raise HTTPException(status_code=404, detail="Ticket not found")
     
+    # Calculate diff metrics between original AI suggestion/draft and final response
+    original_draft = ticket.ai_suggestion or ""
+    diff_data = calculate_diff_metrics(original_draft, resolution_text)
+    
+    # Update ticket info
     ticket.status = "resolved"
     ticket.ai_suggestion = resolution_text # Save final text
+    metadata = dict(ticket.metadata_info or {})
+    metadata.update(diff_data)
+    ticket.metadata_info = metadata
     
     # Simulate sending email
     print(f"SIMULATION: Sending email to {ticket.contact_email} with resolution: {resolution_text[:50]}...")
@@ -110,9 +126,10 @@ def create_ticket(
 def read_ticket(
     *,
     session: Session = Depends(get_session),
-    ticket_id: str
+    ticket_id: int
 ):
     ticket = session.get(Ticket, ticket_id)
     if not ticket:
         raise HTTPException(status_code=404, detail="Ticket not found")
     return ticket
+
