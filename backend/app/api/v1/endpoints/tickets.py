@@ -48,9 +48,9 @@ def process_ticket_triage(ticket_id: int):
         print(f"DEBUG: Triage completed and committed for ticket {ticket_id}")
         
         try:
-            asyncio.run(event_broadcaster.publish("triage_completed", {"ticket_id": ticket_id, "category": ticket.category, "priority": ticket.priority}))
-        except Exception:
-            pass
+            event_broadcaster.publish_sync("triage_completed", {"ticket_id": ticket_id, "category": ticket.category, "priority": ticket.priority})
+        except Exception as e:
+            print(f"Warning: Failed to broadcast triage event: {str(e)}")
 
 @router.post("/{ticket_id}/draft", response_model=dict)
 def generate_ticket_draft(
@@ -120,6 +120,12 @@ def create_ticket(
     # Trigger AI Triage in background
     background_tasks.add_task(process_ticket_triage, ticket.id)
     
+    # Broadcast ticket creation event
+    try:
+        event_broadcaster.publish_sync("ticket_created", {"ticket_id": ticket.id, "title": ticket.title})
+    except Exception:
+        pass
+    
     return ticket
 
 @router.get("/{ticket_id}", response_model=Ticket)
@@ -132,4 +138,5 @@ def read_ticket(
     if not ticket:
         raise HTTPException(status_code=404, detail="Ticket not found")
     return ticket
+
 

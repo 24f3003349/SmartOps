@@ -1,6 +1,9 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Optional
 from sqlmodel import SQLModel, Field
+
+def utc_now() -> datetime:
+    return datetime.now(timezone.utc)
 
 class UserBase(SQLModel):
     email: str = Field(unique=True, index=True)
@@ -11,8 +14,8 @@ class UserBase(SQLModel):
 class User(UserBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     hashed_password: str
-    created_at: datetime = Field(default_factory=datetime.utcnow)
-    updated_at: datetime = Field(default_factory=datetime.utcnow)
+    created_at: datetime = Field(default_factory=utc_now)
+    updated_at: datetime = Field(default_factory=utc_now)
 
 class UserCreate(UserBase):
     password: str

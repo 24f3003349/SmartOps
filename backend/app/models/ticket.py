@@ -1,7 +1,10 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from enum import Enum
 from typing import Optional, List
 from sqlmodel import SQLModel, Field, JSON, Column
+
+def utc_now() -> datetime:
+    return datetime.now(timezone.utc)
 
 class TicketStatus(str, Enum):
     NEW = "new"
@@ -29,8 +32,8 @@ class Ticket(TicketBase, table=True):
     ai_suggestion: Optional[str] = None
     ai_confidence: Optional[float] = None
     metadata_info: dict = Field(default_factory=dict, sa_column=Column(JSON))
-    created_at: datetime = Field(default_factory=datetime.utcnow)
-    updated_at: datetime = Field(default_factory=datetime.utcnow)
+    created_at: datetime = Field(default_factory=utc_now)
+    updated_at: datetime = Field(default_factory=utc_now)
 
 class TicketCreate(TicketBase):
     pass

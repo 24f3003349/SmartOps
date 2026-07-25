@@ -167,10 +167,11 @@ export default function TicketsPage() {
   }
 
   const filteredTickets = tickets.filter(t => {
+    const searchLower = search.toLowerCase()
     const matchesSearch = 
-      t.title.toLowerCase().includes(search.toLowerCase()) || 
-      t.contact_email.toLowerCase().includes(search.toLowerCase()) ||
-      t.id.includes(search)
+      String(t.title || "").toLowerCase().includes(searchLower) || 
+      String(t.contact_email || "").toLowerCase().includes(searchLower) ||
+      String(t.id || "").includes(search)
 
     if (!matchesSearch) return false
 
@@ -179,6 +180,7 @@ export default function TicketsPage() {
     if (filterTab === "resolved") return t.status === "resolved"
     return true
   })
+
 
   const getPriorityColor = (priority: string) => {
     switch (priority.toLowerCase()) {
